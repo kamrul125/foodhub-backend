@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  
+  // রিলেশনসমূহ
+  foods     Food[]   
+  orders    Order[]  
+  
+  createdAt DateTime @default(now())
+}
+
+model Food {
+  id       Int     @id @default(autoincrement())
+  title    String
+  price    Float
+  
+  // সেলারের সাথে রিলেশন
+  sellerId Int
+  seller   User    @relation(fields: [sellerId], references: [id])
+  
+  // অর্ডারের সাথে রিলেশন
+  orders   Order[] 
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  
+  // ইউজারের সাথে রিলেশন
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  
+  // নতুন যোগ করা ফিল্ডসমূহ
+  status      String   @default("PENDING") // অর্ডার স্ট্যাটাস
+  totalAmount Float    @default(0)         // মোট টাকার পরিমাণ
+  
+  // খাবারের সাথে রিলেশন
+  foods       Food[]   
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  SELLER
+  ADMIN
+}
