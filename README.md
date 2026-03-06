@@ -29,6 +29,7 @@ PORT=5000
 API Endpoints (Endpoints Preview):
 
 Method,Endpoint,Description,Access
+
 POST,/api/auth/register,Register a new user,Public
 POST,/api/auth/login,User login,Public
 GET,/api/foods,Get all food items,Public
@@ -47,7 +48,10 @@ npx prisma migrate dev
 3.সার্ভার চালু
 npm run dev
 
+
+Github link : https://github.com/kamrul125/foodhub-backend
+
+
 লেখক (Author)
 Md Kamruzzaman
 
-Github link : 
