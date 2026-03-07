@@ -9,7 +9,7 @@ export const createFood = async (sellerId: number, title: string, price: number)
     data: {
       title,
       price: Number(price),
-      sellerId,
+      sellerId: Number(sellerId), // নিশ্চিত করা হচ্ছে এটি নাম্বার
     },
   });
 };
@@ -25,13 +25,20 @@ export const getAllFoods = async () => {
   });
 };
 
-// ৩. Update Food (FIXED)
+// ৩. Get Single Food by ID (এডিট পেজের জন্য প্রয়োজন)
+export const getFoodById = async (id: number) => {
+  return prisma.food.findUnique({
+    where: { id: Number(id) },
+  });
+};
+
+// ৪. Update Food (FIXED WITH TYPE CHECKING)
 export const updateFood = async (
   foodId: number,
   sellerId: number,
   data: { title?: string; price?: number }
 ) => {
-  // ডাটাবেস থেকে আগে খাবারটি খুঁজে বের করা
+  // ডাটাবেস থেকে খাবারটি খুঁজে বের করা
   const food = await prisma.food.findUnique({
     where: { id: Number(foodId) },
   });
@@ -40,12 +47,15 @@ export const updateFood = async (
     throw new Error("Food not found");
   }
 
-  // ওনারশিপ চেক: যে সেলার তৈরি করেছে সেই কি আপডেট করছে?
-  if (food.sellerId !== sellerId) {
+  // ডিবাগিং: যদি আবার এরর আসে, আপনার ব্যাকএন্ড টার্মিনালে এই দুটি মান চেক করুন
+  console.log(`Comparing IDs -> DB: ${food.sellerId} (${typeof food.sellerId}), Token: ${sellerId} (${typeof sellerId})`);
+
+  // ওনারশিপ চেক: টাইপ মিসম্যাচ এড়াতে উভয়কে Number এ রূপান্তর করা হয়েছে
+  if (Number(food.sellerId) !== Number(sellerId)) {
     throw new Error("You are not authorized to update this food");
   }
 
-  // শুধুমাত্র title এবং price আপডেট করা (Prisma-তে id পাঠানো যাবে না)
+  // ডাটা আপডেট করা
   return prisma.food.update({
     where: { id: Number(foodId) },
     data: {
@@ -55,7 +65,7 @@ export const updateFood = async (
   });
 };
 
-// ৪. Delete Food
+// ৫. Delete Food (FIXED WITH TYPE CHECKING)
 export const deleteFood = async (foodId: number, sellerId: number) => {
   const food = await prisma.food.findUnique({
     where: { id: Number(foodId) },
@@ -65,7 +75,8 @@ export const deleteFood = async (foodId: number, sellerId: number) => {
     throw new Error("Food not found");
   }
 
-  if (food.sellerId !== sellerId) {
+  // ডিলিট করার আগেও ওনারশিপ চেক
+  if (Number(food.sellerId) !== Number(sellerId)) {
     throw new Error("You are not allowed to delete this food");
   }
 
