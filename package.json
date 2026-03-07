@@ -1,17 +1,18 @@
 {
   "name": "foodhub-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "FoodHub Backend API with Express and Prisma",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev src/server.ts",
-     "seed:admin": "ts-node src/seed/admin.seed.ts",
+    "seed:admin": "ts-node src/seed/admin.seed.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "vercel-build": "npx prisma generate"
   },
   "keywords": [],
-  "author": "",
+  "author": "Md Kamruzzaman",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -29,6 +30,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.3.0",
     "prisma": "^6.19.2",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
