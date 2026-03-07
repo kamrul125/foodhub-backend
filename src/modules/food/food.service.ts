@@ -13,7 +13,7 @@ export const createFood = async (
   return prisma.food.create({
     data: {
       title,
-      price,
+      price: Number(price), // নিশ্চিত করা হচ্ছে এটি সংখ্যা
       sellerId,
     },
   });
@@ -40,6 +40,7 @@ export const updateFood = async (
   sellerId: number,
   data: { title?: string; price?: number }
 ) => {
+  // ১. খাবারটি ডাটাবেসে আছে কি না এবং এটি এই সেলারের কি না তা চেক করা
   const food = await prisma.food.findUnique({
     where: { id: foodId },
   });
@@ -52,9 +53,15 @@ export const updateFood = async (
     throw new Error("You are not allowed to update this food");
   }
 
+  // ২. শুধুমাত্র title এবং price ফিল্ড দুটি নিয়ে আপডেট করা
+  // এতে data অবজেক্টে অন্য কোনো আজেবাজে ফিল্ড থাকলেও এরর আসবে না
+  const updatePayload: any = {};
+  if (data.title) updatePayload.title = data.title;
+  if (data.price) updatePayload.price = Number(data.price);
+
   return prisma.food.update({
     where: { id: foodId },
-    data,
+    data: updatePayload,
   });
 };
 
