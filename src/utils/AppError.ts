@@ -12,5 +12,5 @@ export class AppError extends Error {
   }
 }
 
-// এই লাইনটি যোগ করুন
+
 export default AppError;

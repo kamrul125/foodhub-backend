@@ -10,11 +10,11 @@ dotenv.config();
 
 const app = express();
 
-// ১. সঠিক CORS কনফিগারেশন (PATCH এবং OPTIONS মেথড যুক্ত করা হয়েছে)
+
 app.use(cors({
   origin: [
-    "http://localhost:5173", // আপনার Vite/React ফ্রন্টএন্ড পোর্ট
-    "https://foodhub-frontend-ochre.vercel.app" // আপনার লাইভ ফ্রন্টএন্ড লিঙ্ক
+    "http://localhost:5173",
+    "https://foodhub-frontend-ochre.vercel.app" //  লাইভ ফ্রন্টএন্ড লিঙ্ক
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // এখানে PATCH যোগ করা হয়েছে
