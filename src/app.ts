@@ -10,15 +10,14 @@ dotenv.config();
 
 const app = express();
 
-// CORS কনফিগারেশন আপডেট করা হয়েছে
+// CORS কনফিগারেশন - আপনার নতুন লিঙ্কটি এখানে বসান
 app.use(cors({
-  origin: "https://foodhub-frontend-gamma.vercel.app", // আপনার ফ্রন্টএন্ড লিঙ্ক
+  origin: "https://foodhub-frontend-ochre.vercel.app", // নতুন ওছর (ochre) লিঙ্কটি দিন
   credentials: true
 }));
 
 app.use(express.json());
 
-// রুট পাথ চেক করার জন্য একটি সিম্পল রাউট (ঐচ্ছিক)
 app.get("/", (req, res) => {
   res.send("FoodHub Server is Running!");
 });
@@ -27,7 +26,6 @@ app.use("/api", routes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/foods", foodRoutes);
 
-// গ্লোবাল এরর হ্যান্ডলার সবসময় সবার শেষে থাকে
 app.use(globalErrorHandler);
 
 export default app;
