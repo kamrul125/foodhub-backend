@@ -1,20 +1,36 @@
 import { Request, Response } from "express";
 import * as foodService from "./food.service";
 
-// Create Food
+// ১. এটিই সেই ফাংশন যা আপনার ফাইলে মিসিং ছিল
+export const getFoodById = async (req: Request, res: Response) => {
+  try {
+    const foodId = Number(req.params.id);
+    const food = await foodService.getFoodById(foodId);
+
+    if (!food) {
+      return res.status(404).json({ message: "Food not found" });
+    }
+
+    res.json(food);
+  } catch (error: any) {
+    res.status(400).json({
+      message: error.message || "Failed to fetch food details",
+    });
+  }
+};
+
+// ২. Create Food
 export const createFood = async (
   req: Request & { user?: any },
   res: Response
 ) => {
   try {
     const { title, price } = req.body;
-
     const food = await foodService.createFood(
       req.user.id,
       title,
       price
     );
-
     res.status(201).json(food);
   } catch (error: any) {
     res.status(400).json({
@@ -23,7 +39,7 @@ export const createFood = async (
   }
 };
 
-// Get All Foods (Public)
+// ৩. Get All Foods
 export const getAllFoods = async (_req: Request, res: Response) => {
   try {
     const foods = await foodService.getAllFoods();
@@ -35,38 +51,34 @@ export const getAllFoods = async (_req: Request, res: Response) => {
   }
 };
 
-// Update Food
+// ৪. Update Food
 export const updateFood = async (
   req: Request & { user?: any },
   res: Response
 ) => {
   try {
     const foodId = Number(req.params.id);
-
     const food = await foodService.updateFood(
       foodId,
       req.user.id,
       req.body
     );
-
     res.json(food);
   } catch (error: any) {
-    res.status(400).json({
+    res.status(401).json({
       message: error.message || "Failed to update food",
     });
   }
 };
 
-// Delete Food
+// ৫. Delete Food
 export const deleteFood = async (
   req: Request & { user?: any },
   res: Response
 ) => {
   try {
     const foodId = Number(req.params.id);
-
     await foodService.deleteFood(foodId, req.user.id);
-
     res.json({ message: "Food deleted successfully" });
   } catch (error: any) {
     res.status(400).json({

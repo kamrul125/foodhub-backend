@@ -9,7 +9,7 @@ export const createFood = async (sellerId: number, title: string, price: number)
     data: {
       title,
       price: Number(price),
-      sellerId: Number(sellerId), // নিশ্চিত করা হচ্ছে এটি নাম্বার
+      sellerId: Number(sellerId),
     },
   });
 };
@@ -25,20 +25,19 @@ export const getAllFoods = async () => {
   });
 };
 
-// ৩. Get Single Food by ID (এডিট পেজের জন্য প্রয়োজন)
+// ৩. Get Single Food (এডিট পেজে ডাটা দেখানোর জন্য মাস্ট লাগবে)
 export const getFoodById = async (id: number) => {
   return prisma.food.findUnique({
     where: { id: Number(id) },
   });
 };
 
-// ৪. Update Food (FIXED WITH TYPE CHECKING)
+// ৪. Update Food (ওনারশিপ চেক ফিক্সড)
 export const updateFood = async (
   foodId: number,
   sellerId: number,
   data: { title?: string; price?: number }
 ) => {
-  // ডাটাবেস থেকে খাবারটি খুঁজে বের করা
   const food = await prisma.food.findUnique({
     where: { id: Number(foodId) },
   });
@@ -47,15 +46,11 @@ export const updateFood = async (
     throw new Error("Food not found");
   }
 
-  // ডিবাগিং: যদি আবার এরর আসে, আপনার ব্যাকএন্ড টার্মিনালে এই দুটি মান চেক করুন
-  console.log(`Comparing IDs -> DB: ${food.sellerId} (${typeof food.sellerId}), Token: ${sellerId} (${typeof sellerId})`);
-
-  // ওনারশিপ চেক: টাইপ মিসম্যাচ এড়াতে উভয়কে Number এ রূপান্তর করা হয়েছে
+  // টাইপ মিসম্যাচ এড়াতে Number() ব্যবহার করা হয়েছে
   if (Number(food.sellerId) !== Number(sellerId)) {
     throw new Error("You are not authorized to update this food");
   }
 
-  // ডাটা আপডেট করা
   return prisma.food.update({
     where: { id: Number(foodId) },
     data: {
@@ -65,7 +60,7 @@ export const updateFood = async (
   });
 };
 
-// ৫. Delete Food (FIXED WITH TYPE CHECKING)
+// ৫. Delete Food
 export const deleteFood = async (foodId: number, sellerId: number) => {
   const food = await prisma.food.findUnique({
     where: { id: Number(foodId) },
@@ -75,7 +70,6 @@ export const deleteFood = async (foodId: number, sellerId: number) => {
     throw new Error("Food not found");
   }
 
-  // ডিলিট করার আগেও ওনারশিপ চেক
   if (Number(food.sellerId) !== Number(sellerId)) {
     throw new Error("You are not allowed to delete this food");
   }
