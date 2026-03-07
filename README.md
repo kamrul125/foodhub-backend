@@ -15,10 +15,10 @@ Security: JWT (JSON Web Token) & Bcrypt
 মূল বৈশিষ্ট্যসমূহ (Features):
 
 User Auth: নিরাপদ রেজিস্ট্রেশন এবং লগইন সিস্টেম।
-Role Management: ৩টি নির্দিষ্ট রোল (Customer, Provider/Seller, Admin)।
+Role Management: ৩টি নির্দিষ্ট রোল (Customer, Seller, Admin) এর জন্য আলাদা এক্সেস লেভেল।
 Food CRUD: সেলাররা খাবার যোগ, আপডেট এবং ডিলিট করতে পারেন।
 Order Management: কাস্টমাররা অর্ডার করতে পারেন এবং তাদের অর্ডারের ইতিহাস দেখতে পারেন।
-Admin Dashboard: অ্যাডমিন সব ইউজার এবং অর্ডার মনিটর করতে পারেন।
+Admin Dashboard: অ্যাডমিন সব অর্ডার মনিটর করতে পারেন এবং অর্ডারের স্ট্যাটাস (Pending/Delivered) আপডেট করতে পারেন।
 
 Project Structure:
 
@@ -63,6 +63,7 @@ GET,/api/admin/orders,View all orders,Admin
 npm install
 
 2.প্রিজমা মাইগ্রেশন
+npx prisma generate
 npx prisma migrate dev
 
 3.সার্ভার চালু

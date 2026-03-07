@@ -29,4 +29,12 @@ router.get(
   orderController.allOrders
 );
 
+// ✅ নতুন যোগ করা: Only ADMIN can update order status
+router.patch(
+  "/:id",
+  protect,
+  roleGuard("ADMIN"),
+  orderController.updateOrderStatus
+);
+
 export default router;

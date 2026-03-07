@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  SELLER
+  ADMIN
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   name      String
@@ -14,46 +20,47 @@ model User {
   password  String
   role      Role     @default(USER)
   
-  // রিলেশনসমূহ
+  // সেলার হিসেবে যে খাবারগুলো যোগ করেছে
   foods     Food[]   
+  // কাস্টমার হিসেবে যে অর্ডারগুলো করেছে
   orders    Order[]  
   
   createdAt DateTime @default(now())
 }
 
 model Food {
-  id       Int     @id @default(autoincrement())
-  title    String
-  price    Float
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  // খাবারের বর্ণনা
+  price       Float
+  image       String?  // খাবারের ছবির URL
+  category    String?  // যেমন: বার্গার, পিজ্জা, ড্রিংকস
   
   // সেলারের সাথে রিলেশন
-  sellerId Int
-  seller   User    @relation(fields: [sellerId], references: [id])
+  sellerId    Int
+  seller      User     @relation(fields: [sellerId], references: [id])
   
   // অর্ডারের সাথে রিলেশন
-  orders   Order[] 
-}
-
-model Order {
-  id          Int      @id @default(autoincrement())
-  
-  // ইউজারের সাথে রিলেশন
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  
-  // নতুন যোগ করা ফিল্ডসমূহ
-  status      String   @default("PENDING") // অর্ডার স্ট্যাটাস
-  totalAmount Float    @default(0)         // মোট টাকার পরিমাণ
-  
-  // খাবারের সাথে রিলেশন
-  foods       Food[]   
+  orders      Order[] 
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-enum Role {
-  USER
-  SELLER
-  ADMIN
+model Order {
+  id          Int      @id @default(autoincrement())
+  
+  // ইউজারের সাথে রিলেশন (কে অর্ডার করেছে)
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  
+  // খাবারের সাথে রিলেশন
+  foods       Food[]   
+  
+  status      String   @default("PENDING") // PENDING, DELIVERED, CANCELLED
+  totalAmount Float    @default(0)
+  address     String?  // ডেলিভারি এড্রেস (রিকোয়ারমেন্টে থাকতে পারে)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
