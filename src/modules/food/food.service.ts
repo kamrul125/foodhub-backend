@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma";
 
-// Create Food (SELLER)
+// ১. Create Food (SELLER)
 export const createFood = async (
   sellerId: number,
   title: string,
@@ -13,13 +13,13 @@ export const createFood = async (
   return prisma.food.create({
     data: {
       title,
-      price: Number(price), // নিশ্চিত করা হচ্ছে এটি সংখ্যা
+      price: Number(price),
       sellerId,
     },
   });
 };
 
-// Get All Foods (Public)
+// ২. Get All Foods (Public)
 export const getAllFoods = async () => {
   return prisma.food.findMany({
     include: {
@@ -34,13 +34,13 @@ export const getAllFoods = async () => {
   });
 };
 
-// Update Food (SELLER – own food only)
+// ৩. Update Food (SELLER – own food only)
 export const updateFood = async (
   foodId: number,
   sellerId: number,
   data: { title?: string; price?: number }
 ) => {
-  // ১. খাবারটি ডাটাবেসে আছে কি না এবং এটি এই সেলারের কি না তা চেক করা
+  // ডাটাবেসে খাবারটি আছে কি না চেক করা
   const food = await prisma.food.findUnique({
     where: { id: foodId },
   });
@@ -49,23 +49,24 @@ export const updateFood = async (
     throw new Error("Food not found");
   }
 
+  // চেক করা যে এই খাবারটি এই সেলারের কি না
   if (food.sellerId !== sellerId) {
     throw new Error("You are not allowed to update this food");
   }
 
-  // ২. শুধুমাত্র title এবং price ফিল্ড দুটি নিয়ে আপডেট করা
-  // এতে data অবজেক্টে অন্য কোনো আজেবাজে ফিল্ড থাকলেও এরর আসবে না
-  const updatePayload: any = {};
-  if (data.title) updatePayload.title = data.title;
-  if (data.price) updatePayload.price = Number(data.price);
+  // গুরুত্বপূর্ণ: শুধু title এবং price কে আলাদা করে নেওয়া
+  // এতে ফ্রন্টএন্ড থেকে id বা অন্য কিছু আসলেও প্রিজমা এরর দিবে না
+  const updateData: any = {};
+  if (data.title) updateData.title = data.title;
+  if (data.price) updateData.price = Number(data.price);
 
   return prisma.food.update({
     where: { id: foodId },
-    data: updatePayload,
+    data: updateData,
   });
 };
 
-// Delete Food (SELLER – own food only)
+// ৪. Delete Food (SELLER – own food only)
 export const deleteFood = async (foodId: number, sellerId: number) => {
   const food = await prisma.food.findUnique({
     where: { id: foodId },
