@@ -17,7 +17,7 @@ app.use(cors({
     "https://foodhub-frontend-ochre.vercel.app" //  লাইভ ফ্রন্টএন্ড লিঙ্ক
   ],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // এখানে PATCH যোগ করা হয়েছে
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], 
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 

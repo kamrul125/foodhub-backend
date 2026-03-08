@@ -33,7 +33,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
             email: true,
           },
         },
-        foods: true, // আপনার স্কিমায় রিলেশন নাম 'foods'
+        foods: true,
       },
     });
 

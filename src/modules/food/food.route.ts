@@ -8,7 +8,7 @@ const router = Router();
 // Public
 router.get("/", foodController.getAllFoods);
 
-// নির্দিষ্ট খাবার দেখার রুট (এডিট পেজের জন্য)
+
 router.get("/:id", protect, foodController.getFoodById); 
 
 // SELLER only

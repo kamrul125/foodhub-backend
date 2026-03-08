@@ -25,14 +25,14 @@ export const getAllFoods = async () => {
   });
 };
 
-// ৩. Get Single Food (এডিট পেজে ডাটা দেখানোর জন্য মাস্ট লাগবে)
+// ৩. Get Single Food 
 export const getFoodById = async (id: number) => {
   return prisma.food.findUnique({
     where: { id: Number(id) },
   });
 };
 
-// ৪. Update Food (ওনারশিপ চেক ফিক্সড)
+// ৪. Update Food 
 export const updateFood = async (
   foodId: number,
   sellerId: number,
@@ -46,7 +46,7 @@ export const updateFood = async (
     throw new Error("Food not found");
   }
 
-  // টাইপ মিসম্যাচ এড়াতে Number() ব্যবহার করা হয়েছে
+  
   if (Number(food.sellerId) !== Number(sellerId)) {
     throw new Error("You are not authorized to update this food");
   }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as foodService from "./food.service";
 
-// ১. এটিই সেই ফাংশন যা আপনার ফাইলে মিসিং ছিল
+
 export const getFoodById = async (req: Request, res: Response) => {
   try {
     const foodId = Number(req.params.id);
